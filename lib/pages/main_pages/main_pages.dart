@@ -11,7 +11,7 @@ class MainPages extends StatelessWidget {
     TapBloc tapBloc = context.read<TapBloc>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tic Tac Tou'),
+        title: const Text('Tic Tac Toe'),
         centerTitle: true,
       ),
       body: BlocBuilder<TapBloc, Map<String, dynamic>>(
