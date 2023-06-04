@@ -17,16 +17,16 @@ class TapBloc extends Bloc<TapEvent, Map<String, dynamic>> {
         }) {
     on<UpdateTap>((event, emit) {
       List<String> listData = state['listData'];
-
       int index = event.index;
       bool isSelected = state['isSelected'];
-
+      //! ini handle jika index yang belum diklik akan terisi dengan X dan O, dan ketika sudah terisi maka tidak akan terisi/terganti, sebagai contoh ketika nilai sudah X maka X tidak akan berubah menjadi O begitu juga sebaliknya
       if (state['isSelected'] && state['listData'][index] == '') {
         listData[index] = 'O';
       } else if (!state['isSelected'] && state['listData'][index] == '') {
         listData[index] = 'X';
       }
 
+      //! ini untuk menghandle jika index di klik maka akan menampilkan nilai X lalu ketika index lain di klik maka akan menampilkan nilai O, ini perlu di handle karena ketika mengklik nilai sebelumnya X maka nilai setelahnya akan bernilai X begitupun juga O
       if (listData[index].contains('X')) {
         isSelected = true;
       }
@@ -53,6 +53,7 @@ class TapBloc extends Bloc<TapEvent, Map<String, dynamic>> {
       BuildContext context = event.context;
       bool isWin = state['isWin'];
       bool isSerries = state['isSerries'];
+
       List<List<int>> winningCombinations = [
         // Rows
         [0, 1, 2], [3, 4, 5], [6, 7, 8],
@@ -71,6 +72,21 @@ class TapBloc extends Bloc<TapEvent, Map<String, dynamic>> {
             listData[a] == listData[c] &&
             listData[a] != '') {
           isWin = true;
+          //! untuk menambahkan nilai X jika manang
+          if (comparison.contains('X') && isWin) {
+            emit({
+              ...state,
+              'counterX': state['counterX'] + 1,
+            });
+          }
+          //! untuk menambahkan nilai O jika manang
+          if (comparison.contains('O') && isWin) {
+            emit({
+              ...state,
+              'counterO': state['counterO'] + 1,
+            });
+          }
+
           showDialog(
             context: context,
             builder: (_) => AlertDialog(
@@ -109,6 +125,7 @@ class TapBloc extends Bloc<TapEvent, Map<String, dynamic>> {
               actionsAlignment: MainAxisAlignment.center,
             ),
           );
+          //! untuk mengubah nilai semua list menjadi list[''.sebanyak 9]
           if (isWin) {
             for (var i = 0; i < listData.length; i++) {
               listData[i] = '';
@@ -117,6 +134,8 @@ class TapBloc extends Bloc<TapEvent, Map<String, dynamic>> {
           isWin = false;
         }
       }
+
+      //! jika semua list sudah terisi namun tidak ada yang menang
       if (listData.every((element) => element.isNotEmpty)) {
         isSerries = true;
         showDialog(
@@ -156,6 +175,7 @@ class TapBloc extends Bloc<TapEvent, Map<String, dynamic>> {
             actionsAlignment: MainAxisAlignment.center,
           ),
         );
+        //! untuk mengubah nilai semua list menjadi list[''.sebanyak 9]
         if (isSerries) {
           for (var i = 0; i < listData.length; i++) {
             listData[i] = '';
