@@ -1,4 +1,1 @@
-Fiktur
-//.menjadikan ke center
-//.Menambahkan music
-//.nyusul
+Aplikasi ini dibuat menggunakan flutter dengan state management bloc
